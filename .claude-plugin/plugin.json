@@ -1,0 +1,8 @@
+{
+  "name": "localize",
+  "description": "本地化与译文审校：review（审校已有译文）/ translate（从零翻译并独立自审）/ adapt（按目标市场重构）。自带 zh/ja/en 语对包与 ja-JP/zh-CN/zh-TW/en-US/en-GB locale 包。",
+  "author": { "name": "TunaSaiko" },
+  "repository": "https://github.com/TunaSaiko/localize",
+  "license": "MIT",
+  "keywords": ["localization", "translation", "review", "japanese", "chinese"]
+}
