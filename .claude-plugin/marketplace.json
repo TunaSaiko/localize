@@ -1,11 +1,16 @@
 {
   "name": "tunasaiko",
   "description": "TunaSaiko 的 Claude Code 插件",
-  "owner": { "name": "TunaSaiko" },
+  "owner": {
+    "name": "TunaSaiko"
+  },
   "plugins": [
     {
       "name": "localize",
-      "source": "./",
+      "source": {
+        "source": "github",
+        "repo": "TunaSaiko/localize"
+      },
       "description": "本地化与译文审校（中日英）"
     }
   ]
