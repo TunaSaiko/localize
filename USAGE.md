@@ -64,7 +64,8 @@
 ├── decisions.md         全篇统一事项的决定记录
 ├── scripts-report.md    脚本跑出来的事实层结果
 ├── draft.ja.md          译文本体（translate 入口）
-└── findings.md          发现清单（review 入口）
+├── findings.md          发现清单（review 入口）
+└── feedback-pack.md     可选：脱敏的反馈包（你同意才会生成）
 ```
 
 `adapt` 还会多出：`authorization.md`、`market-conventions.md`、`fact-ledger.md`、`structure-options.md`、`adapt-map.md`、`task-test.md`。
@@ -108,6 +109,8 @@ python3 ~/.claude/skills/localize/scripts/deliverable_check.py \
   ~/你的目录/bilingual.md \
   --target-locale ja --source-locale en --src-col 2 --tgt-col 3
 ```
+
+列号从 0 起算：表头第一列是 0。上面这个例子对应 `| 编号 | 备注 | 源文 | 译文 |` 这样的四列表。
 
 它查六件事：译文栏里混进源文语言、混进 `【要確認】` 这类占位、混进 `<br>` 标签、占位符 `{name}` 对不上、空译文、语言写串了。
 
@@ -165,7 +168,16 @@ python3 ~/.claude/skills/localize/scripts/deliverable_check.py \
 
 ---
 
-## 七、想改它的行为
+## 七、它问你"要不要反馈包"时
+
+交付之后，如果这次有值得送回去的发现（母语者纠正、误报、漏报、新的假朋友词、说明不清的地方），
+它会**问你一次**要不要整理成反馈包。不想要就说"不用"，它不会再问。
+
+同意的话它会：只留出问题的那个词或搭配、把专名和数字换成占位、跑 `feedback_check.py` 确认没把原文带出去，
+然后把全文给你看。**它不会自己提交。** 你看过觉得没问题，到
+https://github.com/TunaSaiko/localize/issues/new/choose 选「反馈包」粘贴就行。
+
+## 八、想改它的行为
 
 - 改**判断标准** → `references/diagnostics.md`
 - 改**严重度尺度和报告格式** → `references/severity-and-report.md`

@@ -1,0 +1,22 @@
+name: 反馈包（skill 生成的）
+description: 把 localize 交付后生成的 feedback-pack.md 整段贴进来
+title: "[反馈包] "
+labels: [feedback-pack]
+body:
+  - type: markdown
+    attributes:
+      value: 谢谢！反馈包已经过 `feedback_check.py` 脱敏检查，但**提交前请你再通读一遍**。
+  - type: textarea
+    id: pack
+    attributes:
+      label: 反馈包全文
+      render: markdown
+    validations:
+      required: true
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: 脱敏确认
+      options:
+        - label: 我确认这里没有客户名、产品名、人名、具体数字、网址、原文整句或其他机密信息
+          required: true

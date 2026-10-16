@@ -1,0 +1,56 @@
+name: 母语者反馈
+description: 母语者读了译文后指出的问题，尤其是 skill 没报过的
+title: "[母语者] "
+labels: [native-feedback]
+body:
+  - type: dropdown
+    id: pair
+    attributes:
+      label: 语对
+      options: [zh → ja, ja → zh, en → ja, ja → en, zh → en, en → zh, 其他（写在下面）]
+    validations:
+      required: true
+  - type: dropdown
+    id: material
+    attributes:
+      label: 材料类型
+      options: [投资/商务提案, 合同/条款, 社群/活动公告, 产品 UI/应用内文案, 技术文档, 市场/品牌文案, 官网/落地页, 不确定]
+    validations:
+      required: true
+  - type: textarea
+    id: phenomenon
+    attributes:
+      label: 母语者指出了什么
+      description: 只写出问题的最小片段（一个词或一个搭配），专名和数字换成 <公司> <数字> 这样的占位
+    validations:
+      required: true
+  - type: textarea
+    id: should
+    attributes:
+      label: 母语者认为应该怎样写、为什么
+    validations:
+      required: true
+  - type: dropdown
+    id: evidence
+    attributes:
+      label: 依据强度
+      options: [母语者多人一致, 母语者一人, 有出处链接, 脚本可复现, 个人判断]
+    validations:
+      required: true
+  - type: textarea
+    id: basis
+    attributes:
+      label: 依据
+      description: 母语者原话（可意译）、出处链接（写清出处的读者是谁）、复现步骤等。个人判断也可以，照实写。
+  - type: dropdown
+    id: reported
+    attributes:
+      label: skill 当时报过这个问题吗
+      options: [没报过, 报过但被判成小问题/被丢掉了, 不确定]
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: 脱敏确认
+      options:
+        - label: 我确认这里没有客户名、产品名、人名、具体数字、网址、原文整句或其他机密信息
+          required: true

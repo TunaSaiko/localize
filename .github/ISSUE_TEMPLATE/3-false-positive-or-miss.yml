@@ -1,0 +1,58 @@
+name: 误报 / 漏报
+description: skill 报了但其实没错，或者该报的没报
+title: "[误报/漏报] "
+labels: [accuracy]
+body:
+  - type: dropdown
+    id: kind
+    attributes:
+      label: 类型
+      options: [误报（报了但没错）, 漏报（没报但其实错了）]
+    validations:
+      required: true
+  - type: dropdown
+    id: pair
+    attributes:
+      label: 语对
+      options: [zh → ja, ja → zh, en → ja, ja → en, zh → en, en → zh, 其他（写在下面）]
+    validations:
+      required: true
+  - type: dropdown
+    id: material
+    attributes:
+      label: 材料类型
+      options: [投资/商务提案, 合同/条款, 社群/活动公告, 产品 UI/应用内文案, 技术文档, 市场/品牌文案, 官网/落地页, 不确定]
+    validations:
+      required: true
+  - type: textarea
+    id: phenomenon
+    attributes:
+      label: 现象
+      description: 最小片段即可；写清是哪个入口（review/translate/adapt）、哪一遍或哪个脚本报的
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: 为什么说它报错了 / 漏了
+    validations:
+      required: true
+  - type: dropdown
+    id: evidence
+    attributes:
+      label: 依据强度
+      options: [母语者多人一致, 母语者一人, 有出处链接, 脚本可复现, 个人判断]
+    validations:
+      required: true
+  - type: textarea
+    id: basis
+    attributes:
+      label: 依据
+      description: 母语者原话（可意译）、出处链接（写清出处的读者是谁）、复现步骤等。个人判断也可以，照实写。
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: 脱敏确认
+      options:
+        - label: 我确认这里没有客户名、产品名、人名、具体数字、网址、原文整句或其他机密信息
+          required: true

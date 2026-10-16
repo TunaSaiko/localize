@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 投稿规则（提交前建议看一眼）
+    url: https://github.com/TunaSaiko/localize/blob/main/CONTRIBUTING.md
+    about: 什么样的反馈最有用、依据怎么写、怎么脱敏

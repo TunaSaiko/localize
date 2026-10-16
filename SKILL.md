@@ -68,6 +68,7 @@ description: 把材料本地化到另一个语言市场、按目标市场重构�
 | `style-sheet.md` | 样式表（模板 `templates/style-sheet.md`），从 locale 包默认值起 |
 | `open-questions.md` | 待确认清单（模板 `templates/open-questions.md`） |
 | `scripts-report.md` | R1 各脚本的输出 |
+| `feedback-pack.md` | 可选的反馈包（模板 `templates/feedback-pack.md`），见 §9.2 |
 | `findings.md` | 审校发现清单（模板 `templates/findings-report.md`）。**落盘责任在主对话，不在 subagent**，见下 |
 | `draft.<locale>.md` | translate 入口的译文成品（含「推测」标记） |
 | `decisions.md` | 全篇统一事项的决定记录（术语、符号、语体、关键取舍） |
@@ -133,6 +134,7 @@ R6 怀疑论者复核（独立 subagent，**必须给它 Read/grep 能力**）�
     **怀疑论者只管降级，不管漏判。** 它审不到的 minor 不等于可以不处理，见 §5.5。
 R7 写 findings.md；更新 glossary.md / open-questions.md / decisions.md
 R8 给用户：先列全篇统一事项让用户定，再逐条清单让用户勾选；勾选后才应用
+R9（可选）交付后问一次要不要反馈包 → §9.2
 ```
 
 R3/R4/R6 的 subagent 提示词模板在 `references/subagent-prompts.md`，必须自包含（把文件路径、场景、捷径都写进去，不依赖继承的上下文）。
@@ -250,6 +252,7 @@ T4 对 (源文, draft) 跑 §5.1 的 R1–R7（独立上下文）
 T5 按 findings 修订 draft；跑一致性扫描（术语表每个词在全文的实际用法）；
     **再跑一次 `distribution_check`**——逐条修订会改变全篇分布，改完必须重新看分布
 T6 交付：draft + glossary + style-sheet + open-questions + decisions（+ 长度报告）
+T7（可选）交付后问一次要不要反馈包 → §9.2
 ```
 
 ### 5.2b adapt：作者授权后的结构/体裁重构（MVP）
@@ -262,7 +265,7 @@ T6 交付：draft + glossary + style-sheet + open-questions + decisions（+ 长�
 **呈现形式（散文 ↔ 表格/编号步骤，AUTH-08）**——这一项单列，因为散文改表格会把一句话拆进几个格子，条件和否定最容易在拆的过程中掉出去。
 **永远不能改**：数字、日期、主体、对象、数量、时间、功能、价格、免费/付费条件、效果强度、法律含义、否定和限制。
 
-**流程**：A0 输入/授权 → A1 目标市场惯例 → A2 事实账本 → A3 最多两个结构方案并等待作者批准 → A4 分段重构 → A5 独立事实/所指与自然度审校 → A6 作者验收。作者未批准结构方案不能生成；作者未验收不能称为完成。
+**流程**：A0 输入/授权 → A1 目标市场惯例 → A2 事实账本 → A3 最多两个结构方案并等待作者批准 → A4 分段重构 → A5 独立事实/所指与自然度审校 → A6 作者验收 →（可选）反馈包 §9.2。作者未批准结构方案不能生成；作者未验收不能称为完成。
 
 **产物**：`authorization.md`、`market-conventions.md`、`fact-ledger.md`、`structure-options.md`、`adapt-map.md`、`decisions.md`、`open-questions.md`、成稿；`adapt-map` 支持一个源单元对应多个目标单元、多个源单元合并到一个目标单元。N≠M 不等于漏译，必须经映射和事实账本核对。
 
@@ -402,7 +405,10 @@ python3 ${CLAUDE_SKILL_DIR}/scripts/term_coverage.py enforce <双语表> --gloss
 python3 ${CLAUDE_SKILL_DIR}/scripts/distribution_check.py <双语表> --src-col N --tgt-col N --target-locale ja --source-locale zh
 python3 ${CLAUDE_SKILL_DIR}/scripts/adapt_check.py gate --authorization <授权表> --structure <结构方案> --conventions <市场惯例> [--map <adapt-map>]
 python3 ${CLAUDE_SKILL_DIR}/scripts/adapt_check.py map --source <源文> --ledger <事实账本> --map <adapt-map> --draft <目标稿> --authorization <授权表> [--glossary <术语表>]
+python3 ${CLAUDE_SKILL_DIR}/scripts/feedback_check.py <feedback-pack.md> --against <源文> [<译文> …]   # 反馈包脱敏闸
 ```
+
+**所有 `--*-col` 列号都从 0 起算**（表头第一列是 0）：`| id | 源文 | 译文 |` 里源文是 `1`、译文是 `2`。传错了脚本会报「解析出 0 行」或「列位可能指错了」，不会静默通过。
 
 **`adapt_check.py` 是唯一会"裁决"的脚本**（gate 退出 2 ＝ 不得生成，map 退出 1 ＝ 有阻塞），
 因为它管的是授权和事实覆盖这两件不能靠人自觉的事。**但它裁的只是形式合同，不是语义**——详见 §5.2b。
@@ -433,6 +439,7 @@ python3 ${CLAUDE_SKILL_DIR}/scripts/adapt_check.py map --source <源文> --ledge
   （`团队` 表外→两种译法；`企业` 只有复合词条目→两种译法）。**失败的不是执行，是覆盖**，而覆盖数得出来。
   `cover` **只认词条本身、不认复合词子串**——被「企业○○」骗过一次才这么写。
 - `length_estimate.py --siblings`：把 key 里只有一个 token 变化的条目（如 `plan_lite_/standard_/pro_/max_description`，示意）归成**平行组**，列组内显示宽度极差。**只列不判**，阈值没有跨项目依据。用途见 §5.6：组级发现不能靠改一个成员来修，而单独改过的那一条通常就是宽度离群项。
+- `feedback_check.py`：反馈包的脱敏闸（§9.2）。比对反馈包与用户材料，共有连续片段 ≥15 字、邮箱、网址、本机路径即退出码 1；比对对象读不到或为空是退出码 2，**不是通过**。
 - `pptx_text.py`：从 `.pptx` 按页抽出文字（含 `--notes` 备注），源文是 PPT 时先用它转成 markdown。看不到排版。
 - `deliverable_check.py`：交付前自检，语言无关。查文字体系不符、源文残留、标记泄漏（占位/方案脚手架/内部指针）、标记语言混入（HTML 标签）、变量占位符不匹配、空译文。品牌名规格名等有意不译的用 `--keep` 声明，命中后降为待确认。
 - `length_estimate.py`：按行对齐估算显示宽度（全角 1.0 em，半角约 0.55 em），给出比值；`--max-em` 时列出超限行。**中日英之间的风险不是字符数膨胀，是显示宽度和行高**：英→日字符数通常收缩，宽度膨胀；短串膨胀率最高。
@@ -511,6 +518,38 @@ G8 模型做不了。报告末尾必须写一句：本报告未经母语者复�
 
 - **"像不像本地写的"和"是不是本地人写的"是两个问题。** 前者问质量，可以逐句验证；后者问出处，材料里没有作者信息就答不了，也不该拿它当质量结论。派活时把问题写清楚，避免对方答错题。
 
+### 9.2 交付之后：可选的反馈包（帮 skill 变好）
+
+这个 skill 不会自己"越用越好"——用户项目里的术语表、样式表只对那个项目有用；
+skill 自己的语对包、locale 包和规则，只有被人改了才会变好。反馈包是把一次使用里的发现**送回维护者**的通道。
+
+**什么时候问**：R8 / T6 / A6 交付完之后（§9.1 母语者反馈处理完之后同样）。**只问一次**，一句话，例如
+「这次有几处发现可能对改进这个 skill 有用，要不要我整理成一份脱敏的反馈包？你看过再决定交不交。」
+用户说不用或不回答，本次就不再提。**可读档不问；本次没有候选条目也不问**——没东西可交就别打扰。
+
+**收什么**（候选来源）：
+- 母语者纠正里 list-A 没报过的（§9.1 第二堆，真正的模型盲区）
+- 用户驳回、且给了理由的发现（误报）；交付后才发现的错（漏报）
+- 语对包/locale 包里没有、这次核实过的假朋友、"字面对但不是业界说法"
+- 本 skill 说明自相矛盾、没覆盖到、按铁律 10 记过冲突的地方
+- 脚本报错、误报、"看不见却报没问题"
+
+**不收**：个人风格偏好、只适用于本项目的术语决定（留在用户自己的 glossary/style-sheet 里）。
+没有依据的猜测可以收，但依据栏必须写「个人判断」，**不许包装成母语者结论**。
+
+**脱敏写法**（反馈包会离开用户的电脑，按最严的标准写）：
+- 只留出问题的**最小片段**——通常是一个词或一个搭配，原则上不超过 15 字；不写整句原文
+- 公司名、产品名、人名、地名、数字、金额、网址、邮箱、文件路径一律换成占位：`<公司>` `<产品>` `<数字>`
+- 材料只写类型（七类之一），不写项目名、文件名、客户行业细节
+- 写完跑 `python3 ${CLAUDE_SKILL_DIR}/scripts/feedback_check.py <feedback-pack.md> --against <源文> <译文>`，
+  **退出码非 0 就改反馈包，改到 0 为止；不许为了过检调大 `--max-run`**。第 3 节列出的数字逐个确认，来自用户材料的换成占位
+
+**交给用户**：按 `templates/feedback-pack.md` 写进工作目录的 `feedback-pack.md`，**把全文贴给用户看**，附上提交入口
+https://github.com/TunaSaiko/localize/issues/new/choose 。
+**不得自动提交。** 只有用户明确说"帮我提交"，且本机有 `gh`，才在再展示一次全文并得到确认后用 `gh issue create` 提交。
+
+反馈包是给维护者的线索，不是本次交付的一部分，也不是质量结论；用户交不交都不影响交付。
+
 ## 10. 参考文件索引（只引一层）
 
 | 文件 | 何时读 |
@@ -521,7 +560,7 @@ G8 模型做不了。报告末尾必须写一句：本报告未经母语者复�
 | `references/subagent-prompts.md` | R3/R4/R6/T3/adapt：六个自包含的 subagent 提示词模板（A–F） |
 | `references/pairs/*.md` | 加载语对包 |
 | `references/locales/*.md` | 加载 locale 包（样式表默认值、权威出处、冲突裁决、法规触发） |
-| `templates/*.md` | 起三样东西（术语表、样式表、待确认清单）和报告；adapt 另有 authorization / market-conventions / fact-ledger / structure-options / adapt-map / decisions / task-test 七份 |
+| `templates/*.md` | 起三样东西（术语表、样式表、待确认清单）和报告；可选的反馈包 `feedback-pack.md`；adapt 另有 authorization / market-conventions / fact-ledger / structure-options / adapt-map / decisions / task-test 七份 |
 | `scripts/adapt_check.py` | A3→A4 和 A4→A5 两道闸，**adapt 每次都要跑**（§5.2b） |
 
 ## 11. 一页速查
@@ -530,5 +569,6 @@ G8 模型做不了。报告末尾必须写一句：本报告未经母语者复�
 做的时候：三步法；随时自问"因为形式像，还是这类材料就这么写"；读不出原意的列清单不猜
 审的时候：脚本先跑 → 单语遍抓语感 → 双语遍抓实质 → 怀疑论者复核 → 严重度 → 三选项
 交付前：八道闸门；母语者问的是"像不像本地写的"
+交付后：有新发现就问一次要不要反馈包（§9.2）；脱敏闸 `feedback_check.py` 过了才给用户看
 走 adapt 时另加：样本 + 授权表 + 事实账本 → `adapt_check.py gate` 过了才生成 → 生成后 `adapt_check.py map`
 → 模板 F 独立审校（脚本管形式，它管语义）→ 作者验收。**脚本通过 ≠ adapt 通过。**

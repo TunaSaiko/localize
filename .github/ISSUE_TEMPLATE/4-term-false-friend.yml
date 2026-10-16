@@ -1,0 +1,61 @@
+name: 新术语 / 假朋友
+description: 语对包里没有、但实际踩到的同形异义词或"字面对但不是业界说法"
+title: "[术语] "
+labels: [terms]
+body:
+  - type: dropdown
+    id: pair
+    attributes:
+      label: 语对
+      options: [zh → ja, ja → zh, en → ja, ja → en, zh → en, en → zh, 其他（写在下面）]
+    validations:
+      required: true
+  - type: dropdown
+    id: material
+    attributes:
+      label: 材料类型
+      options: [投资/商务提案, 合同/条款, 社群/活动公告, 产品 UI/应用内文案, 技术文档, 市场/品牌文案, 官网/落地页, 不确定]
+    validations:
+      required: true
+  - type: input
+    id: src
+    attributes:
+      label: 源语的词
+    validations:
+      required: true
+  - type: input
+    id: wrong
+    attributes:
+      label: 容易直搬成的写法
+    validations:
+      required: true
+  - type: input
+    id: right
+    attributes:
+      label: 建议的写法
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: 适用语境 / 例外
+      description: 比如"商务材料里是负面，某行业里是中性行话"
+  - type: dropdown
+    id: evidence
+    attributes:
+      label: 依据强度
+      options: [母语者多人一致, 母语者一人, 有出处链接, 脚本可复现, 个人判断]
+    validations:
+      required: true
+  - type: textarea
+    id: basis
+    attributes:
+      label: 依据
+      description: 母语者原话（可意译）、出处链接（写清出处的读者是谁）、复现步骤等。个人判断也可以，照实写。
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: 脱敏确认
+      options:
+        - label: 我确认这里没有客户名、产品名、人名、具体数字、网址、原文整句或其他机密信息
+          required: true

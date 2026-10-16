@@ -8,15 +8,24 @@ Claude Code skill：把材料本地化到另一个语言市场，或审校已有
 
 ## 安装
 
-需要：`python3`（脚本只用标准库，不用装依赖）。
+需要：`python3`（脚本只用标准库，不用装依赖）。Mac 上终端输入 `python3 --version` 能看到版本号就行。
 
-**Claude Code**
+**Claude Code（推荐：插件方式，以后能自动更新）**
+
+在 Claude Code 里依次输入：
+
+```
+/plugin marketplace add TunaSaiko/localize
+/plugin install localize@tunasaiko
+```
+
+装好后重开 Claude Code。想自动收到更新，在 `/plugin` 菜单里找到这个插件、打开自动更新。
+
+插件装不上（多半是 Claude Code 版本太旧，可以先 `claude update`），也可以用 git 装，效果一样，只是要手动更新：
 
 ```bash
 git clone https://github.com/TunaSaiko/localize.git ~/.claude/skills/localize
 ```
-
-装完重开 Claude Code，说「帮我审校这份日语翻译」「把这份材料本地化成日语」之类的话，它会自动启用。
 
 **Codex**
 
@@ -24,9 +33,11 @@ git clone https://github.com/TunaSaiko/localize.git ~/.claude/skills/localize
 git clone https://github.com/TunaSaiko/localize.git ~/.agents/skills/localize
 ```
 
-**更新**：进到上面的目录里跑 `git pull`。
+**更新**：插件方式按上面开自动更新；git 方式进到安装目录跑 `git pull`。
 
-文档里的示例命令按 `~/.claude/skills/localize` 写；装在别处时，把命令里的这段路径换成你的实际位置。skill 自己运行时会自动识别所在位置，不受影响。
+装好后说「帮我审校这份日语翻译」「把这份材料本地化成日语」之类的话，它会自动启用。
+
+文档里的示例命令按 `~/.claude/skills/localize` 写。用插件或装在别处时，直接让 AI 帮你跑这些命令就行——skill 运行时会自动识别自己装在哪。
 
 ## 怎么用
 
@@ -51,7 +62,7 @@ git clone https://github.com/TunaSaiko/localize.git ~/.agents/skills/localize
 | `references/pairs/` | 语对包。`zh-ja` 最扎实，其余五个方向是种子包 |
 | `references/locales/` | 地区写法：ja-JP / zh-CN / zh-TW / en-US / en-GB |
 | `scripts/` | 事实层检查（数字、日期、货币、URL、字符规范），stdlib only |
-| `templates/` | 术语表、样式表、待确认清单、报告等模板 |
+| `templates/` | 术语表、样式表、待确认清单、报告、反馈包等模板 |
 | `evals/` | 冒烟样本与自动测试：`cd evals && python3 -m unittest discover -p 'test_*.py'` |
 
 ## 验证到什么程度
@@ -64,6 +75,15 @@ git clone https://github.com/TunaSaiko/localize.git ~/.agents/skills/localize
 文中「实测」案例均来自真实项目，已脱敏：项目与产品不具名；引语、票数和统计数字是原始记录；标了「示意」的词例是替换过的。
 
 **母语者终审替代不了。** 这条写死在内核里，任何自动化结果都不是上线许可。
+
+## 帮它变好
+
+这个 skill 不会自己越用越好——它的语对包和规则要靠真实使用里的发现来改。
+用完一次后它会问你要不要整理一份**脱敏的反馈包**（只问一次，不想要就说不用），你看过再决定交不交。
+也可以直接到 [Issues](https://github.com/TunaSaiko/localize/issues/new/choose) 选表格提交。
+什么样的反馈最有用、依据怎么写、怎么脱敏，见 [CONTRIBUTING.md](CONTRIBUTING.md)。
+
+**不要贴客户材料。** 反馈只需要出问题的那个词或搭配。
 
 ## 许可证
 
