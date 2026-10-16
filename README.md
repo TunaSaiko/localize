@@ -43,6 +43,9 @@ git clone https://github.com/TunaSaiko/localize.git ~/.agents/skills/localize
 
 看 [USAGE.md](USAGE.md)。写给使用者的，不是给模型的。
 
+**小提示：说清楚材料是给谁看的、你在哪个行业，结果会准很多。** 比如「这是官网落地页，读者是日本的中小企业采购负责人，我们做二手车交易」。
+同一个词在不同行业意思可能不同，它不会主动问行业，但你说了就会用上。
+
 ## 三个入口
 
 | 入口 | 什么时候用 | 产出 |
